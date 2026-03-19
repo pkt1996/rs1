@@ -515,6 +515,14 @@ function formatDOB(dateStr) {
   const yyyy = date.getFullYear();
   return `${dd}/${mm}/${yyyy}`;
 }
+  fetch("./config.json?nocache=" + Date.now())
+  .then(res => res.json())
+  .then(data => {
+    if (data.maintenance === true) {
+      window.location.replace("./maintenance.html");
+    }
+  })
+  .catch(err => console.log("Maintenance error:", err));
 </script>
 
 <!-- SAME FOOTER -->
@@ -584,20 +592,6 @@ document.addEventListener("keydown", function(e){
     if(pos > titleText.length) pos = 0;
   }, 250); // speed: 250ms per scroll step
 })();
-
-window.addEventListener("DOMContentLoaded", function() {
-
-  fetch("./config.json?nocache=" + Date.now())
-    .then(res => res.json())
-    .then(data => {
-      if (data.maintenance === true) {
-        window.location.href = "./maintenance.html";
-      }
-    })
-    .catch(err => console.log(err));
-
-});
-
 </script>
 <div id="loading" style="display:none;"><div class="spinner"></div><div>Please wait...</div></div>
 </body>
