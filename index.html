@@ -517,38 +517,29 @@ function formatDOB(dateStr) {
   return `${dd}/${mm}/${yyyy}`;
 }
 
+
 async function checkMaintenance() {
   try {
-    const res = await fetch("./config.json?nocache=" + Date.now(), {
-      cache: "no-store"
-    });
+    // maintenance page par ho to skip
+    if (location.pathname.includes("maintenance.html")) return;
 
+    const res = await fetch("config.json?nocache=" + Date.now());
     const data = await res.json();
 
-    if (data.maintenance === true) {
-      window.location.replace("/maintenance/");
-    } else {
-      document.body.style.display = "block";
+    if (data.maintenance) {
+      window.location.replace("maintenance.html");
     }
 
   } catch (e) {
-    document.body.style.display = "block";
-    console.log("Error:", e);
+    console.log("Check failed");
   }
 }
 
+// 👇 First load
 checkMaintenance();
 
-/* AUTO CHECK (maintenance OFF hone par reload) */
-setInterval(() => {
-  fetch("./config.json?nocache=" + Date.now(), { cache: "no-store" })
-    .then(res => res.json())
-    .then(data => {
-      if (data.maintenance === false) {
-        location.reload();
-      }
-    });
-}, 3000);
+// 👇 Har 3 sec me check karega
+setInterval(checkMaintenance, 3000);
 </script>
 
 <!-- SAME FOOTER -->
