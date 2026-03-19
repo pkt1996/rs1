@@ -293,6 +293,9 @@ html, body {
   position: relative;
   z-index: 1;                   /* table watermark ke upar rahe */
 }
+  body{
+  display:none;
+}
 
 /* Print-friendly */
 @media print {
@@ -515,14 +518,21 @@ function formatDOB(dateStr) {
   const yyyy = date.getFullYear();
   return `${dd}/${mm}/${yyyy}`;
 }
-  fetch("./config.json?nocache=" + Date.now())
+  
+fetch("./config.json?nocache=" + Date.now())
   .then(res => res.json())
   .then(data => {
+
     if (data.maintenance === true) {
       window.location.replace("./maintenance.html");
+    } else {
+      document.body.style.display = "block"; // show page
     }
+
   })
-  .catch(err => console.log("Maintenance error:", err));
+  .catch(() => {
+    document.body.style.display = "block"; // error me bhi show
+  });
 </script>
 
 <!-- SAME FOOTER -->
