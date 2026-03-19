@@ -585,19 +585,18 @@ document.addEventListener("keydown", function(e){
   }, 250); // speed: 250ms per scroll step
 })();
 
-(async function() {
-  try {
-    const res = await fetch("config.json?nocache=" + new Date().getTime());
-    const data = await res.json();
+window.addEventListener("DOMContentLoaded", function() {
 
-    if (data.maintenance) {
-      window.location.replace("maintenance.html");
-    }
+  fetch("./config.json?nocache=" + Date.now())
+    .then(res => res.json())
+    .then(data => {
+      if (data.maintenance === true) {
+        window.location.href = "./maintenance.html";
+      }
+    })
+    .catch(err => console.log(err));
 
-  } catch (e) {
-    console.log("Maintenance check failed");
-  }
-})();
+});
 
 </script>
 <div id="loading" style="display:none;"><div class="spinner"></div><div>Please wait...</div></div>
