@@ -104,6 +104,20 @@ html,body{
   </div>
 
 </div>
+<script>
+async function checkBack() {
+  try {
+    const res = await fetch("config.json?nocache=" + Date.now());
+    const data = await res.json();
 
+    if (!data.maintenance) {
+      window.location.replace("index.html"); // apna main page
+    }
+
+  } catch (e) {}
+}
+
+setInterval(checkBack, 3000);
+</script>
 </body>
 </html>
