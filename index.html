@@ -518,21 +518,39 @@ function formatDOB(dateStr) {
   const yyyy = date.getFullYear();
   return `${dd}/${mm}/${yyyy}`;
 }
-  
-fetch("./config.json?nocache=" + Date.now())
-  .then(res => res.json())
-  .then(data => {
+
+async function checkMaintenance() {
+  try {
+    const res = await fetch("./config.json?nocache=" + Date.now(), {
+      cache: "no-store"
+    });
+
+    const data = await res.json();
 
     if (data.maintenance === true) {
-      window.location.replace("./maintenance.html");
+      window.location.replace("/maintenance/");
     } else {
-      document.body.style.display = "block"; // show page
+      document.body.style.display = "block";
     }
 
-  })
-  .catch(() => {
-    document.body.style.display = "block"; // error me bhi show
-  });
+  } catch (e) {
+    document.body.style.display = "block";
+    console.log("Error:", e);
+  }
+}
+
+checkMaintenance();
+
+/* AUTO CHECK (maintenance OFF hone par reload) */
+setInterval(() => {
+  fetch("./config.json?nocache=" + Date.now(), { cache: "no-store" })
+    .then(res => res.json())
+    .then(data => {
+      if (data.maintenance === false) {
+        location.reload();
+      }
+    });
+}, 3000);
 </script>
 
 <!-- SAME FOOTER -->
